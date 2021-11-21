@@ -40,6 +40,10 @@ int main(void)
     // initialize the pins to be input, output, alternate function, etc...
 
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
+    InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1); 
+    InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1); 
+    InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); 
+    InitializePin(GPIOB, GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); 
 
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
     // is required, since there's one on the board)
@@ -52,7 +56,7 @@ int main(void)
     // as mentioned above, only one of the following code sections will be used
     // (depending on which of the #define statements at the top of this file has been uncommented)
 
-#ifdef BUTTON_BLINK
+/* #ifdef BUTTON_BLINK */
     // Wait for the user to push the blue button, then blink the LED.
 
     // wait for button press (active low)
@@ -65,8 +69,8 @@ int main(void)
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         HAL_Delay(250);  // 250 milliseconds == 1/4 second
     }
-#endif
-
+/* #endif
+ */
 #ifdef LIGHT_SCHEDULER
     // Turn on the LED five seconds after reset, and turn it off again five seconds later.
 
