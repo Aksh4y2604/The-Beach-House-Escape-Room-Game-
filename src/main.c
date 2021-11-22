@@ -26,6 +26,23 @@
 
 #include "ece198.h"
 
+
+int getRed(void)
+{
+    return 0;
+}
+int getGreen(void)
+{
+    return 0;
+}
+int getBlue(void)
+{
+    return 0;
+}
+
+
+
+
 int main(void)
 {
     HAL_Init(); // initialize the Hardware Abstraction Layer
@@ -59,13 +76,46 @@ int main(void)
 /* #ifdef BUTTON_BLINK */
     // Wait for the user to push the blue button, then blink the LED.
 
+
+
+
+
+
+
+
+
+
+
     // wait for button press (active low)
     while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
     {
     }
+    int points=0;
 
     while (1) // loop forever, blinking the LED
     {
+        //we point every time the color is red
+        if (points==0){
+            if (getRed()==1){
+                points++;
+                HAL_Delay(3000);
+            }
+        }else if(points==1){
+                if (getGreen()==1){
+                    points++;
+                    HAL_Delay(3000);
+                }
+            }else if(points==3){
+                if (getBlue()==1){
+                    points++;
+                    //Game Won --> LED blinks 
+                    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+                    HAL_Delay(250);  // 250 milliseconds == 1/4 second
+                    
+                }
+            }
+
+        }
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         HAL_Delay(250);  // 250 milliseconds == 1/4 second
     }
@@ -267,9 +317,9 @@ int main(void)
             HAL_Delay(5);
         }
     }
-#endif
     return 0;
 }
+#endif
 
 // This function is called by the HAL once every millisecond
 void SysTick_Handler(void)
