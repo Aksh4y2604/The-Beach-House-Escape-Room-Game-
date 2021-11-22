@@ -27,16 +27,39 @@
 #include "ece198.h"
 
 
-int getRed(void)
+
+int getRed()
 {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, 0);//S2 low
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, 0);//S3 low
+    
+    //define integer with pulse width
+
+    //read the output of the from pin PB9
+
+
+    
     return 0;
 }
 int getGreen(void)
 {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, 1);//S2 high
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, 1);//S2 high
+    
+    //define integer with pulse width
+
+    //read the output of the from pin PB9
     return 0;
 }
 int getBlue(void)
 {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, 0);//S2 low
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, 1);//S3 high
+    
+    //define integer with pulse width
+
+    
+    //read the output of the from pin PB9
     return 0;
 }
 
@@ -56,11 +79,13 @@ int main(void)
 
     // initialize the pins to be input, output, alternate function, etc...
 
-    InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  // on-board LED
-    InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1); 
-    InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1); 
-    InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); 
-    InitializePin(GPIOB, GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); 
+
+    InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S0
+    InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S1
+    InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S2
+    InitializePin(GPIOB, GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); //S3
+
+    InitializePin(GPIOA,GPIO_PIN_8,GPIO_MODE_INPUT,GPIO_NOPULL,0);//Sensor Output
 
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
     // is required, since there's one on the board)
