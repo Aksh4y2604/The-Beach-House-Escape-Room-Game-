@@ -27,40 +27,69 @@
 #include "ece198.h"
 
 
+int PulseIn(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint32_t timeout)
+{
+    uint32_t start = HAL_GetTick();
+    while(!HAL_GPIO_ReadPin(GPIOx, GPIO_Pin))
+    {
+        if(HAL_GetTick() - start > timeout)
+        {
+            return 0;
+        }
+    }
+    start = HAL_GetTick();
+    while(HAL_GPIO_ReadPin(GPIOx, GPIO_Pin))
+    {
+        if(HAL_GetTick() - start > timeout)
+        {
+            return 0;
+        }
+    }
+    return HAL_GetTick() - start;
+}
 
 int getRed()
 {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, 0);//S2 low
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, 0);//S3 low
-    
+    int pw = PulseIn(GPIOA, GPIO_PIN_8, 1000);
+
     //define integer with pulse width
 
     //read the output of the from pin PB9
 
 
     
-    return 0;
+    return pw;
 }
 int getGreen(void)
 {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, 1);//S2 high
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, 1);//S2 high
-    
+    int pw = PulseIn(GPIOA, GPIO_PIN_8, 1000);
+
     //define integer with pulse width
 
     //read the output of the from pin PB9
-    return 0;
+
+
+    
+    return pw;
 }
 int getBlue(void)
 {
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, 0);//S2 low
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, 1);//S3 high
     
+    int pw = PulseIn(GPIOA, GPIO_PIN_8, 1000);
+
     //define integer with pulse width
 
-    
     //read the output of the from pin PB9
-    return 0;
+
+
+    
+    return pw;
 }
 
 
@@ -79,7 +108,7 @@ int main(void)
 
     // initialize the pins to be input, output, alternate function, etc...
 
-
+    InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL,0); // LED
     InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S0
     InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S1
     InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S2
@@ -100,38 +129,34 @@ int main(void)
 
 /* #ifdef BUTTON_BLINK */
     // Wait for the user to push the blue button, then blink the LED.
-
-
-
-
-
-
-
-
-
-
-
     // wait for button press (active low)
     while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
     {
     }
-    int points=0;
-
+    int points = 0 ;
     while (1) // loop forever, blinking the LED
     {
+        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+        printf("%d\n",getRed());
+
+        
+        HAL_Delay(25); 
         //we point every time the color is red
         if (points==0){
-            if (getRed()==1){
+            if (getRed()>100){
                 points++;
+                HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
                 HAL_Delay(3000);
+                
             }
         }else if(points==1){
-                if (getGreen()==1){
+                if (getGreen()>100){
                     points++;
+                    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
                     HAL_Delay(3000);
                 }
             }else if(points==3){
-                if (getBlue()==1){
+                if (getBlue()>100){
                     points++;
                     //Game Won --> LED blinks 
                     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
@@ -140,10 +165,10 @@ int main(void)
                 }
             }
 
+
         }
-        HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        HAL_Delay(250);  // 250 milliseconds == 1/4 second
-    }
+ // 250 milliseconds == 1/4 second
+}
 /* #endif
  */
 #ifdef LIGHT_SCHEDULER
