@@ -108,7 +108,7 @@ int main(void)
 
     // initialize the pins to be input, output, alternate function, etc...
 
-    InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL,0); // LED
+    InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL,0);   // LED
     InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S0
     InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S1
     InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S2
@@ -133,31 +133,44 @@ int main(void)
     while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
     {
     }
+
     int points = 0 ;
     while (1) // loop forever, blinking the LED
     {
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        printf("%d\n",getRed());
-
+        char buff[30];
+        sprintf(buff, "Red = %i\r\n", getRed());
+        SerialPuts(buff);
+                char buff1[30];
+        sprintf(buff1, "Green = %i\r\n", getGreen());
+        SerialPuts(buff1);
+                char buff2[30];
+                sprintf(buff2, "Blue = %i\r\n", getBlue());
+                SerialPuts(buff2);
+/*         SerialPuts(tempChar); */
         
         HAL_Delay(25); 
         //we point every time the color is red
         if (points==0){
             if (getRed()>100){
                 points++;
+
+
                 HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-                HAL_Delay(3000);
+                HAL_Delay(300);
                 
             }
         }else if(points==1){
                 if (getGreen()>100){
                     points++;
+
                     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-                    HAL_Delay(3000);
+                    HAL_Delay(300);
                 }
             }else if(points==2){
                 if (getBlue()>100){
                     points++;
+
                     //Game Won --> LED blinks 
                     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
                     HAL_Delay(250);  // 250 milliseconds == 1/4 second
