@@ -110,7 +110,7 @@ int main(void)
 
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL,0); // LED
     InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S0
-    InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S1
+    InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S1
     InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S2
     InitializePin(GPIOB, GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); //S3
 
@@ -155,7 +155,7 @@ int main(void)
                     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
                     HAL_Delay(3000);
                 }
-            }else if(points==3){
+            }else if(points==2){
                 if (getBlue()>100){
                     points++;
                     //Game Won --> LED blinks 
