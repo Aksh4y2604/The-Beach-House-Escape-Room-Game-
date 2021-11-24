@@ -57,14 +57,14 @@ int getRed()
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, 0);//S2 low
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, 0);//S3 low
     int pw = PulseIn(GPIOA, GPIO_PIN_8, 1000);
-
+    int pwPin = PulseIn(GPIOC,GPIO_PIN_13,1000);
     //define integer with pulse width
 
     //read the output of the from pin PB9
 
 
     
-    return pw;
+    return pwPin;
 }
 int getGreen(void)
 {
@@ -121,7 +121,7 @@ int main(void)
     InitializePin(GPIOB, GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); //S3
     // Set Sensor output as input
     InitializePin(GPIOA,GPIO_PIN_8,GPIO_MODE_INPUT,GPIO_NOPULL,0);//Sensor Output
-
+    InitializePin(GPIOC,GPIO_PIN_13, GPIO_MODE_INPUT, GPIO_NOPULL,0);
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
     // is required, since there's one on the board)
 
@@ -153,22 +153,22 @@ int main(void)
     while (1) // loop forever, blinking the LED
     {
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-        HAL_Delay(250); 
+        HAL_Delay(25); 
         
         char buff[30];
         int redValue = map(getRed(), redMin,redMax,255,0);
-        sprintf(buff, "Red = %i\r\n", redValue);
+        sprintf(buff, "Red = %i\r\n", getRed());
         SerialPuts(buff);
   
         
         char buff1[30];
         int greenValue = map(getGreen(), greenMin,greenMax,255,0);
-        sprintf(buff1, "Green = %i\r\n", greenValue);
+        sprintf(buff1, "Green = %i\r\n", getGreen());
         SerialPuts(buff1);
         
         char buff2[30];
         int blueValue = map(getBlue(), blueMin,blueMax,255,0);
-        sprintf(buff2, "Blue = %i\r\n", blueValue);
+        sprintf(buff2, "Blue = %i\r\n", getBlue());
         SerialPuts(buff2);
 /*         SerialPuts(tempChar); */
         
