@@ -26,6 +26,10 @@
 
 #include "ece198.h"
 
+long map(long x, long in_min, long in_max, long out_min, long out_max) {
+  return ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
+}
+
 
 int PulseIn(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint32_t timeout)
 {
@@ -34,7 +38,7 @@ int PulseIn(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint32_t timeout)
     {
         if(HAL_GetTick() - start > timeout)
         {
-            return 0;
+            return -1;
         }
     }
     start = HAL_GetTick();
@@ -42,7 +46,7 @@ int PulseIn(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint32_t timeout)
     {
         if(HAL_GetTick() - start > timeout)
         {
-            return 0;
+            return -2;
         }
     }
     return HAL_GetTick() - start;
@@ -109,11 +113,13 @@ int main(void)
     // initialize the pins to be input, output, alternate function, etc...
 
     InitializePin(GPIOA, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL,0);   // LED
+    //Pulse scaling = 20%
     InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S0
-    InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S1
+    InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S1
+
     InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S2
     InitializePin(GPIOB, GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); //S3
-
+    // Set Sensor output as input
     InitializePin(GPIOA,GPIO_PIN_8,GPIO_MODE_INPUT,GPIO_NOPULL,0);//Sensor Output
 
     // note: the on-board pushbutton is fine with the default values (no internal pull-up resistor
@@ -130,26 +136,42 @@ int main(void)
 /* #ifdef BUTTON_BLINK */
     // Wait for the user to push the blue button, then blink the LED.
     // wait for button press (active low)
-    while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
+    while (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))//the blue button on the board 
     {
     }
 
     int points = 0 ;
+    int redMin = 0; // Red minimum value
+    int redMax = 0; // Red maximum value
+    int greenMin = 0; // Green minimum value
+    int greenMax = 0; // Green maximum value
+    int blueMin = 0; // Blue minimum value
+    int blueMax = 0; // Blue maximum value
+
+    // Variables for final Color values
+
     while (1) // loop forever, blinking the LED
     {
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+        HAL_Delay(250); 
         char buff[30];
-        sprintf(buff, "Red = %i\r\n", getRed());
+        long redValue = map(getRed(), redMin,redMax,255,0);
+        sprintf(buff, "Red = %i\r\n", redValue);
         SerialPuts(buff);
-                char buff1[30];
-        sprintf(buff1, "Green = %i\r\n", getGreen());
+  
+        
+        char buff1[30];
+        long greenValue = map(getGreen(), greenMin,greenMax,255,0);
+        sprintf(buff1, "Green = %i\r\n", greenValue);
         SerialPuts(buff1);
-                char buff2[30];
-                sprintf(buff2, "Blue = %i\r\n", getBlue());
-                SerialPuts(buff2);
+        
+        char buff2[30];
+        long blueValue = map(getBlue(), blueMin,blueMax,255,0);
+        sprintf(buff2, "Blue = %i\r\n", blueValue);
+        SerialPuts(buff2);
 /*         SerialPuts(tempChar); */
         
-        HAL_Delay(25); 
+
         //we point every time the color is red
         if (points==0){
             if (getRed()>100){
