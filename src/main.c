@@ -26,7 +26,7 @@
 
 #include "ece198.h"
 
-long map(long x, long in_min, long in_max, long out_min, long out_max) {
+int map(long x, long in_min, long in_max, long out_min, long out_max) {
   return ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min);
 }
 
@@ -38,7 +38,7 @@ int PulseIn(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint32_t timeout)
     {
         if(HAL_GetTick() - start > timeout)
         {
-            return -1;
+            return 0;
         }
     }
     start = HAL_GetTick();
@@ -46,7 +46,7 @@ int PulseIn(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint32_t timeout)
     {
         if(HAL_GetTick() - start > timeout)
         {
-            return -2;
+            return 0;
         }
     }
     return HAL_GetTick() - start;
@@ -116,10 +116,7 @@ int main(void)
     //Pulse scaling = 20%
     InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S0
     InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S1
-<<<<<<< HEAD
-
-=======
->>>>>>> 9f7b3193e7e66c1450e46dc87a929165613c4cd8
+    
     InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S2
     InitializePin(GPIOB, GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); //S3
     // Set Sensor output as input
@@ -157,19 +154,20 @@ int main(void)
     {
         HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
         HAL_Delay(250); 
+        
         char buff[30];
-        long redValue = map(getRed(), redMin,redMax,255,0);
+        int redValue = map(getRed(), redMin,redMax,255,0);
         sprintf(buff, "Red = %i\r\n", redValue);
         SerialPuts(buff);
   
         
         char buff1[30];
-        long greenValue = map(getGreen(), greenMin,greenMax,255,0);
+        int greenValue = map(getGreen(), greenMin,greenMax,255,0);
         sprintf(buff1, "Green = %i\r\n", greenValue);
         SerialPuts(buff1);
         
         char buff2[30];
-        long blueValue = map(getBlue(), blueMin,blueMax,255,0);
+        int blueValue = map(getBlue(), blueMin,blueMax,255,0);
         sprintf(buff2, "Blue = %i\r\n", blueValue);
         SerialPuts(buff2);
 /*         SerialPuts(tempChar); */
@@ -192,7 +190,7 @@ int main(void)
                     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
                     HAL_Delay(300);
                 }
-            }else if(points==2){
+            }else if(points==3){
                 if (getBlue()>100){
                     points++;
 
