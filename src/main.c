@@ -116,7 +116,10 @@ int main(void)
     //Pulse scaling = 20%
     InitializePin(GPIOB, GPIO_PIN_3, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 1);  //S0
     InitializePin(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S1
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9f7b3193e7e66c1450e46dc87a929165613c4cd8
     InitializePin(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0);  //S2
     InitializePin(GPIOB, GPIO_PIN_10, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL, 0); //S3
     // Set Sensor output as input
@@ -189,7 +192,7 @@ int main(void)
                     HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
                     HAL_Delay(300);
                 }
-            }else if(points==3){
+            }else if(points==2){
                 if (getBlue()>100){
                     points++;
 
